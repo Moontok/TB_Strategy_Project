@@ -2,37 +2,37 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] Animator animator = null;
-
-    float moveSpeed = 4f;
-    float stoppingDistance = 0.1f;
-    float rotationSpeed = 10f;
-    
-    Vector3 targetPosition = Vector3.zero;
+    GridPosition gridPosition = new GridPosition();
+    MoveAction moveAction = new MoveAction();
 
     void Awake()
     {
-        targetPosition = transform.position;
+        moveAction = GetComponent<MoveAction>();
+    }
+
+    void Start()
+    {
+        gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
     }
 
     void Update()
     {
-        if(Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
+        GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if(newGridPosition != gridPosition)
         {
-            Vector3 moveDirection = (targetPosition - transform.position).normalized;
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-            transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotationSpeed);
-            animator.SetBool("IsWalking", true);
-        }
-        else
-        {
-            animator.SetBool("IsWalking", false);
+            LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
+            gridPosition = newGridPosition;
         }
     }
 
-    public void Move(Vector3 targetPosition)
+    public MoveAction GetMoveAction()
     {
-        this.targetPosition = targetPosition;
+        return moveAction;
+    }
+
+    public GridPosition GetGridPosition()
+    {
+        return gridPosition;
     }
 }
