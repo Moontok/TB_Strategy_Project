@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UnitActionSystem : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class UnitActionSystem : MonoBehaviour
 
     [SerializeField] Unit selectedUnit = null;
     [SerializeField] LayerMask unitLayerMask = new LayerMask();
+
+    BaseAction selectedAction = null;
+    bool isBusy = false;
 
     void Awake()
     {
@@ -21,26 +25,61 @@ public class UnitActionSystem : MonoBehaviour
         Instance = this;
     }
 
+    void Start()
+    {
+        SetSelectedUnit(selectedUnit);
+    }
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (isBusy) return;
+
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
+        if (TryHandleUnitSelection()) return;
+
+        HandleSelectedAction();
+    }
+
+    void HandleSelectedAction()
+    {
+        if(Input.GetMouseButtonDown(0))
         {
-            if (TryHandleUnitSelection()) return;
 
-            selectedUnit.GetMoveAction().Move(MouseWorld.GetPosition());
+            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+
+            if (selectedAction.IsValidActionGridPosition(mouseGridPosition))
+            {
+                SetBusy();
+                selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+            }
         }
+    }
 
+    void SetBusy()
+    {
+        isBusy = true;
+    }
+
+    void ClearBusy()
+    {
+        isBusy = false;
     }
 
     bool TryHandleUnitSelection()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
+        if(Input.GetMouseButtonDown(0))
         {
-            if(raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
             {
-                SetSelectedUnit(unit);
-                return true;
+                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+                {
+                    if (unit == selectedUnit) return false;
+
+                    SetSelectedUnit(unit);
+                    return true;
+                }
             }
         }
         return false;
@@ -50,11 +89,23 @@ public class UnitActionSystem : MonoBehaviour
     {
         selectedUnit = unit;
 
+        SetSelectedAction(unit.GetMoveAction());
+
         OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void SetSelectedAction(BaseAction baseAction)
+    {
+        selectedAction = baseAction;
     }
 
     public Unit GetSelectedUnit()
     {
         return selectedUnit;
+    }
+
+    public BaseAction GetSelectedAction()
+    {
+        return selectedAction;
     }
 }
