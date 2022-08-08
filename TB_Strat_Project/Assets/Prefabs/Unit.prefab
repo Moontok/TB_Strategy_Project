@@ -74,6 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 743fb950de8ff604785017bbbb75756b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionPointCost: 1
   animator: {fileID: 2219844654723046833}
   maxMoveDistance: 4
 --- !u!114 &7221269005842566385
@@ -88,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a63bf8ee7045dd42b13240a0fb05558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionPointCost: 2
 --- !u!1 &7606402636451324130
 GameObject:
   m_ObjectHideFlags: 0

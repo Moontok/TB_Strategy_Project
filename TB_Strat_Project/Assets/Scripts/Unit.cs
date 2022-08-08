@@ -1,7 +1,13 @@
+using System;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    public static event EventHandler OnAnyActionPointsChanged;
+
+    [SerializeField] int actionPointsMax = 2;
+
+    int currentActionPoints = 0;
     GridPosition gridPosition = new GridPosition();
     MoveAction moveAction = new MoveAction();
     SpinAction spinAction = new SpinAction();
@@ -16,8 +22,11 @@ public class Unit : MonoBehaviour
 
     void Start()
     {
+        currentActionPoints = actionPointsMax;
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
+
+        TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
     }
 
     void Update()
@@ -48,5 +57,40 @@ public class Unit : MonoBehaviour
     public BaseAction[] GetBaseActionArray()
     {
         return baseActionArray;
+    }
+
+    public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)
+    {
+        if(CanSpendActionPointsToTakeAction(baseAction))
+        {
+            SpendActionPoints(baseAction.GetActionPointCost());
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
+    {
+        return currentActionPoints >= baseAction.GetActionPointCost();
+    }
+
+    public int GetActionPoints()
+    {
+        return currentActionPoints;
+    }
+
+    void SpendActionPoints(int amount)
+    {
+        currentActionPoints -= amount;
+
+        OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    void TurnSystem_OnTurnChanged(object sender, EventArgs e)
+    {
+        currentActionPoints = actionPointsMax;
+
+        OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
     }
 }
