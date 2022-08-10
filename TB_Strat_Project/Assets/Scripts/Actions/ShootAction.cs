@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class ShootAction : BaseAction
 {
+    public event EventHandler OnShoot;
+
     [SerializeField] int maxRange = 7;
     [SerializeField] float aimTime = 1f;
     [SerializeField] float shootTime = 0.1f;
     [SerializeField] float coolOffTime = 0.5f;
+    [SerializeField] Transform projectilePrefab = null;
+    [SerializeField] Transform projectileSpawnPoint = null;
     
     enum State
     {
@@ -55,7 +59,15 @@ public class ShootAction : BaseAction
 
     void Shoot()
     {
-        targetUnit.Damage();
+        OnShoot?.Invoke(this, EventArgs.Empty);
+
+        Transform projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+        Vector3 targetPosition = targetUnit.GetWorldPosition();
+        targetPosition.y = projectileSpawnPoint.position.y;
+
+        Projectile projectile = projectileObject.GetComponent<Projectile>();
+        projectile.SetTarget(targetPosition);
+        targetUnit.Damage(projectile.GetDamageAmount());
     }
 
     void NextState()
@@ -129,5 +141,15 @@ public class ShootAction : BaseAction
         stateTimer = aimTime;
 
         canShootBullet = true;
+    }
+
+    public Transform GetProjectilePrefab()
+    {
+        return projectilePrefab;
+    }
+
+    public Transform GetProjectileSpawnPoint()
+    {
+        return projectileSpawnPoint;
     }
 }
