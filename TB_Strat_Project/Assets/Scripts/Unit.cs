@@ -17,6 +17,8 @@ public class Unit : MonoBehaviour
 
     void Awake()
     {
+        currentActionPoints = actionPointsMax;
+
         healthSystem = GetComponent<HealthSystem>();
         moveAction = GetComponent<MoveAction>();
         spinAction = GetComponent<SpinAction>();
@@ -25,7 +27,6 @@ public class Unit : MonoBehaviour
 
     void Start()
     {
-        currentActionPoints = actionPointsMax;
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
 
@@ -69,6 +70,11 @@ public class Unit : MonoBehaviour
         return baseActionArray;
     }
 
+    public int GetActionPoints()
+    {
+        return currentActionPoints;
+    }
+
     public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)
     {
         if(CanSpendActionPointsToTakeAction(baseAction))
@@ -83,11 +89,6 @@ public class Unit : MonoBehaviour
     public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
     {
         return currentActionPoints >= baseAction.GetActionPointCost();
-    }
-
-    public int GetActionPoints()
-    {
-        return currentActionPoints;
     }
 
     void SpendActionPoints(int amount)
