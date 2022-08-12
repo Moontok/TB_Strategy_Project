@@ -7,6 +7,7 @@ public class Unit : MonoBehaviour
 
     [SerializeField] bool isEnemy = false;
     [SerializeField] int actionPointsMax = 2;
+    [SerializeField] Transform actionCameraPosition = null;
 
     int currentActionPoints = 0;
     HealthSystem healthSystem = null;
@@ -73,6 +74,11 @@ public class Unit : MonoBehaviour
     public int GetActionPoints()
     {
         return currentActionPoints;
+    }
+
+    public Transform GetActionCameraPosition()
+    {
+        return actionCameraPosition;
     }
 
     public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)

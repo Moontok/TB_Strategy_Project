@@ -132,15 +132,14 @@ public class ShootAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        ActionStart(onActionComplete);
-
         targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
-
         
         state = State.Aiming;
         stateTimer = aimTime;
 
         canShootBullet = true;
+
+        ActionStart(onActionComplete);
     }
 
     public Transform GetProjectilePrefab()
@@ -151,5 +150,10 @@ public class ShootAction : BaseAction
     public Transform GetProjectileSpawnPoint()
     {
         return projectileSpawnPoint;
+    }
+
+    public Unit GetTargetUnit()
+    {
+        return targetUnit;
     }
 }
