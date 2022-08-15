@@ -8,6 +8,7 @@ public abstract class BaseAction : MonoBehaviour
     public static event EventHandler OnAnyActionCompleted;
 
     [SerializeField] int actionPointCost = 1;
+    [SerializeField] protected int actionValue = 0;
 
     protected Unit unit = null;
     protected bool isActive = false;
@@ -55,4 +56,26 @@ public abstract class BaseAction : MonoBehaviour
 
         OnAnyActionCompleted?.Invoke(this, EventArgs.Empty);
     }
+
+    public EnemyAIAction GetBestEnemyAIAction()
+    {
+        List<EnemyAIAction> enemyAIActions = new List<EnemyAIAction>();
+
+        List<GridPosition> validActionGridPositions = GetValidActionGridPositionList();
+
+        foreach (GridPosition position in validActionGridPositions)
+        {
+            EnemyAIAction enemyAiAction = GetEnemyAIAction(position);
+            enemyAIActions.Add(enemyAiAction);
+        }
+
+        if (enemyAIActions.Count <= 0)
+            return null;
+
+        enemyAIActions.Sort((EnemyAIAction a, EnemyAIAction b) => b.actionValue - a.actionValue);
+
+        return enemyAIActions[0];
+    }
+
+    public abstract EnemyAIAction GetEnemyAIAction(GridPosition gridPosition);
 }

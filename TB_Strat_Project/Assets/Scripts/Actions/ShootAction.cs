@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ShootAction : BaseAction
 {
@@ -37,8 +38,8 @@ public class ShootAction : BaseAction
         {
             case State.Aiming:
                 Vector3 aimDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-
                 transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * rotationSpeed);
+
                 break;
             case State.Shooting:
                 if(canShootBullet)
@@ -96,9 +97,14 @@ public class ShootAction : BaseAction
 
     public override List<GridPosition> GetValidActionGridPositionList()
     {
-        List<GridPosition> validGridPositionList = new List<GridPosition>();
-
         GridPosition unitGridPosition = unit.GetGridPosition();
+
+        return GetValidActionGridPositionList(unitGridPosition);
+    }
+
+    public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
+    {
+        List<GridPosition> validGridPositionList = new List<GridPosition>();
 
         for (int x = -maxRange; x <= maxRange; x++)
         {
@@ -155,5 +161,26 @@ public class ShootAction : BaseAction
     public Unit GetTargetUnit()
     {
         return targetUnit;
+    }
+
+    public int GetMaxRange()
+    {
+        return maxRange;
+    }
+
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+        Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+        
+        return new EnemyAIAction
+        {
+            GridPosition = gridPosition,
+            actionValue = this.actionValue + Mathf.RoundToInt((1 - targetUnit.GetHealthNormalized()) * this.actionValue)
+    };
+    }
+
+    public int GetTargetCountAtPosition(GridPosition gridPosition)
+    {
+        return GetValidActionGridPositionList(gridPosition).Count;
     }
 }

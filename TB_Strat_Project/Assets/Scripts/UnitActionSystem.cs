@@ -106,7 +106,7 @@ public class UnitActionSystem : MonoBehaviour
     {
         selectedUnit = unit;
 
-        SetSelectedAction(unit.GetMoveAction());
+        SetSelectedAction(unit.GetAction<MoveAction>());
 
         OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -120,6 +120,9 @@ public class UnitActionSystem : MonoBehaviour
 
     public Unit GetSelectedUnit()
     {
+        if (selectedUnit == null)
+            if (UnitManager.Instance.GetFriendlyUnitList().Count > 0)
+                SetSelectedUnit(UnitManager.Instance.GetFriendlyUnitList()[0]);
         return selectedUnit;
     }
 
