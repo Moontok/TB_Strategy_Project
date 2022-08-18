@@ -449,6 +449,7 @@ GameObject:
   - component: {fileID: 1775535887581865360}
   - component: {fileID: 7221269005842566385}
   - component: {fileID: 9206735760351277091}
+  - component: {fileID: 8532949022671314888}
   - component: {fileID: 6426173671010024510}
   - component: {fileID: 965874437555718690}
   - component: {fileID: 8939306791530241315}
@@ -477,7 +478,7 @@ Transform:
   - {fileID: 7540695081686482720}
   - {fileID: 6090415467661235111}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2277191036000557563
 MonoBehaviour:
@@ -553,9 +554,25 @@ MonoBehaviour:
   aimTime: 1
   shootTime: 0.1
   coolOffTime: 0.5
+  weaponHeight: 1.7
   projectilePrefab: {fileID: 213781431812958787, guid: 10012d0bb2b64194db855b746abed752,
     type: 3}
   projectileSpawnPoint: {fileID: 393631567670418299}
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+--- !u!114 &8532949022671314888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2277191036000557565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e88046bef1909e4a94c6fe4b5130cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6426173671010024510
 MonoBehaviour:
   m_ObjectHideFlags: 0

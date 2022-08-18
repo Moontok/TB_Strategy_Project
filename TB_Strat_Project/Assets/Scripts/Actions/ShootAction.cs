@@ -1,19 +1,21 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ShootAction : BaseAction
 {
+    public static event EventHandler OnAnyShoot;
     public event EventHandler OnShoot;
 
     [SerializeField] int maxRange = 7;
     [SerializeField] float aimTime = 1f;
     [SerializeField] float shootTime = 0.1f;
     [SerializeField] float coolOffTime = 0.5f;
+    [SerializeField] float weaponHeight = 1.7f;
     [SerializeField] Transform projectilePrefab = null;
     [SerializeField] Transform projectileSpawnPoint = null;
-    
+    [SerializeField] LayerMask obstacleLayerMask = new LayerMask();
+
     enum State
     {
         Done,
@@ -60,6 +62,7 @@ public class ShootAction : BaseAction
 
     void Shoot()
     {
+        OnAnyShoot?.Invoke(this, EventArgs.Empty);
         OnShoot?.Invoke(this, EventArgs.Empty);
 
         Transform projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
@@ -127,6 +130,14 @@ public class ShootAction : BaseAction
                 Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
                 if (targetUnit.IsEnemy() == unit.IsEnemy())
+                    continue;
+
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                Vector3 aimPosition = unitWorldPosition + Vector3.up * weaponHeight;
+                Vector3 aimDirection = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
+                float distance = Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition());
+
+                if (Physics.Raycast(aimPosition, aimDirection, distance, obstacleLayerMask))
                     continue;
 
                 validGridPositionList.Add(testGridPosition);
