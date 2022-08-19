@@ -1,19 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ExplosiveAction : BaseAction
 {
+    [SerializeField] Transform explosivePrefab = null;
     [SerializeField] int maxRange = 7;
-    //[SerializeField] float weaponHeight = 1.7f;
+    [SerializeField] float weaponHeight = 1.7f;
+    [SerializeField] LayerMask obstacleLayerMask = new LayerMask();
 
     void Update()
     {
         if (!isActive)
             return;
 
-        ActionComplete();
     }
 
     public override string GetActionName()
@@ -51,6 +53,15 @@ public class ExplosiveAction : BaseAction
                 if (testDistance > maxRange)
                     continue;
 
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                Vector3 aimPosition = unitWorldPosition + Vector3.up * weaponHeight;
+                Vector3 targetPosition = LevelGrid.Instance.GetWorldPosition(testGridPosition) + Vector3.up * weaponHeight;
+                Vector3 aimDirection = (targetPosition - unitWorldPosition).normalized;
+                float distance = Vector3.Distance(unitWorldPosition, targetPosition);
+
+                if (Physics.Raycast(aimPosition, aimDirection, distance, obstacleLayerMask))
+                    continue;
+
                 validGridPositionList.Add(testGridPosition);
             }
         }
@@ -60,7 +71,15 @@ public class ExplosiveAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        Debug.Log("Explosive Action");
+        Transform explosiveTransform = Instantiate(explosivePrefab, unit.GetWorldPosition(), Quaternion.identity);
+        ExplosiveProjectile projectile = explosiveTransform.GetComponent<ExplosiveProjectile>();
+        projectile.Setup(gridPosition, OnExplosiveBehaviorComplete);
+
         ActionStart(onActionComplete);
+    }
+
+    void OnExplosiveBehaviorComplete()
+    {
+        ActionComplete();
     }
 }

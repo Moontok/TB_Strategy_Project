@@ -573,6 +573,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e88046bef1909e4a94c6fe4b5130cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionPointCost: 1
+  actionValue: 0
+  explosivePrefab: {fileID: 2670593902413773957, guid: bb7c2104bc0e9a14dbe5aa9caa96c8bd,
+    type: 3}
+  maxRange: 7
+  weaponHeight: 1.7
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &6426173671010024510
 MonoBehaviour:
   m_ObjectHideFlags: 0
