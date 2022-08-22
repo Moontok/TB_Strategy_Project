@@ -71,9 +71,9 @@ public class ExplosiveAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        Transform explosiveTransform = Instantiate(explosivePrefab, unit.GetWorldPosition(), Quaternion.identity);
+        Transform explosiveTransform = Instantiate(explosivePrefab, unit.GetWorldPosition() + Vector3.up * weaponHeight, Quaternion.identity);
         ExplosiveProjectile projectile = explosiveTransform.GetComponent<ExplosiveProjectile>();
-        projectile.Setup(gridPosition, OnExplosiveBehaviorComplete);
+        projectile.Setup(gridPosition, OnExplosiveBehaviorComplete, weaponHeight);
 
         ActionStart(onActionComplete);
     }

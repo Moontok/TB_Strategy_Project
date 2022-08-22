@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Profiling;
 using UnityEngine;
 
 public class ExplosiveProjectile : MonoBehaviour
@@ -12,16 +13,28 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] bool hurtFriendly = false;
     [SerializeField] Transform explosionPrefab = null;
     [SerializeField] TrailRenderer trailRenderer = null;
+    [SerializeField] AnimationCurve arcYAnimCurve = null;
 
     Action onExplosiveBehaviorComplete;
     Vector3 targetPos = Vector3.zero;
+    float totalDistance = 0f;
+    Vector3 posXZ = Vector3.zero;
 
     void Update()
     {
-        Vector3 moveDir = (targetPos - transform.position).normalized;
-        transform.position += moveDir * moveSpeed * Time.deltaTime;
+        Vector3 moveDir = (targetPos - posXZ).normalized;
+        posXZ += moveDir * moveSpeed * Time.deltaTime;
 
-        if(Vector3.Distance(transform.position, targetPos) < detonateRange)
+        float distance = Vector3.Distance(posXZ, targetPos);
+        float distanceNormalized = 1 - distance / totalDistance;
+
+
+        float maxHeight = totalDistance / 4f;
+        float posY = arcYAnimCurve.Evaluate(distanceNormalized);
+        transform.position = new Vector3(posXZ.x, posY, posXZ.z);
+
+
+        if(Vector3.Distance(posXZ, targetPos) < detonateRange)
         {
             Collider[] hits = Physics.OverlapSphere(targetPos, damageRadius);
 
@@ -45,9 +58,18 @@ public class ExplosiveProjectile : MonoBehaviour
         }
     }
 
-    public void Setup(GridPosition targetGridPos, Action onExplosiveBehaviorComplete)
+    public void Setup(GridPosition targetGridPos, Action onExplosiveBehaviorComplete, float height)
     {
         this.onExplosiveBehaviorComplete = onExplosiveBehaviorComplete;
         targetPos = LevelGrid.Instance.GetWorldPosition(targetGridPos);
+
+        posXZ = transform.position;
+        posXZ.y = 0;
+        totalDistance = Vector3.Distance(posXZ, targetPos);
+
+        Keyframe[] keys = arcYAnimCurve.keys;
+        keys[0].value = height;
+
+        arcYAnimCurve.keys = keys;
     }
 }

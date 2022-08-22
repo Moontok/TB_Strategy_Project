@@ -54,6 +54,30 @@ MonoBehaviour:
   explosionPrefab: {fileID: 8633455482024505995, guid: 5d2747feb6ea82a498cd9637fe806606,
     type: 3}
   trailRenderer: {fileID: 5508250812560204698}
+  arcYAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 8.645127
+      outSlope: 8.645127
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.014333895
+    - serializedVersion: 3
+      time: 0.9991455
+      value: 0.001159668
+      inSlope: -7.282383
+      outSlope: -7.282383
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.026844174
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8281223921002484705
 GameObject:
   m_ObjectHideFlags: 0
