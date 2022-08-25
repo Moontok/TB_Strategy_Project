@@ -92,6 +92,25 @@ public class GridSystemVisual : MonoBehaviour
         ShowGridPositionList(gridPositions, gridVisualType);
     }
 
+    void ShowGridRangeSquare(GridPosition gridPosition, int range, GridVisualType gridVisualType)
+    {
+        List<GridPosition> gridPositions = new List<GridPosition>();
+        for (int x = -range; x <= range; x++)
+        {
+            for (int z = -range; z <= range; z++)
+            {
+                GridPosition testGridPosition = gridPosition + new GridPosition(x, z);
+
+                if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                    continue;
+
+                gridPositions.Add(testGridPosition);
+            }
+        }
+
+        ShowGridPositionList(gridPositions, gridVisualType);
+    }
+
     public void ShowGridPositionList(List<GridPosition> gridPositionList, GridVisualType gridVisualType)
     {
         foreach (GridPosition gridPosition in gridPositionList)
@@ -121,6 +140,17 @@ public class GridSystemVisual : MonoBehaviour
                 gridVisualType = GridVisualType.Red;
 
                 ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetMaxRange(), GridVisualType.RedSoft);
+                break;
+            case MeleeAction swordAction:
+                gridVisualType = GridVisualType.Red;
+
+                ShowGridRangeSquare(selectedUnit.GetGridPosition(), swordAction.GetMaxRange(), GridVisualType.RedSoft);
+                break;
+            case ExplosiveAction explosiveAction:
+                gridVisualType = GridVisualType.Yellow;
+                break;
+            case InteractAction interactAction:
+                gridVisualType = GridVisualType.Green;
                 break;
         }
         ShowGridPositionList(selectedAction.GetValidActionGridPositionList(), gridVisualType);

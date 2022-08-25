@@ -47,6 +47,13 @@ public class ExplosiveProjectile : MonoBehaviour
                     if(hurtFriendly || target.IsEnemy())
                         target.Damage(damage);
                 }
+                else
+                {
+                    hit.TryGetComponent(out DestructableObject destructable);
+
+                    if (destructable != null)
+                        destructable.Damage(damage);
+                }
             }
 
             OnAnyExplosion?.Invoke(this, EventArgs.Empty);

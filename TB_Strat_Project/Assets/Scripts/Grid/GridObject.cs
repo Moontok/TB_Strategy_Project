@@ -5,7 +5,9 @@ public class GridObject
     GridSystem<GridObject> gridSystem = null;
     GridPosition gridPosition = new GridPosition(); 
     List<Unit> unitList = null;
-    
+    Door door = null;
+    DestructableObject destructable = null;
+
     public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
     {
         this.gridSystem = gridSystem;
@@ -49,5 +51,25 @@ public class GridObject
             return unitList[0];
         else
             return null;
+    }
+
+    public Door GetDoor()
+    {
+        return door;
+    }
+
+    public void SetDoor(Door door)
+    {
+        this.door = door;
+    }
+
+    public DestructableObject GetDestructable()
+    {
+        return destructable;
+    }
+
+    public void SetDestructable(DestructableObject destructable)
+    {
+        this.destructable = destructable;
     }
 }

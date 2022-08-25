@@ -27,7 +27,7 @@ public class ExplosiveAction : BaseAction
     {
         return new EnemyAIAction
         {
-            GridPosition = gridPosition,
+            gridPosition = gridPosition,
             actionValue = 0
         };
     }

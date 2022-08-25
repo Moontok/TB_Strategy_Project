@@ -66,6 +66,7 @@ public class ShootAction : BaseAction
         OnShoot?.Invoke(this, EventArgs.Empty);
 
         Transform projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+                
         Vector3 targetPosition = targetUnit.GetWorldPosition();
         targetPosition.y = projectileSpawnPoint.position.y;
 
@@ -185,7 +186,7 @@ public class ShootAction : BaseAction
         
         return new EnemyAIAction
         {
-            GridPosition = gridPosition,
+            gridPosition = gridPosition,
             actionValue = this.actionValue + Mathf.RoundToInt((1 - targetUnit.GetHealthNormalized()) * this.actionValue)
     };
     }

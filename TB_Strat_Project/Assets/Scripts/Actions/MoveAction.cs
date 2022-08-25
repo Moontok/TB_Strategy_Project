@@ -110,7 +110,7 @@ public class MoveAction : BaseAction
         int targetCountAtGridPosition = unit.GetAction<ShootAction>().GetTargetCountAtPosition(gridPosition);
         return new EnemyAIAction
         {
-            GridPosition = gridPosition,
+            gridPosition = gridPosition,
             actionValue = this.actionValue * targetCountAtGridPosition
         };
     }
