@@ -19,7 +19,6 @@ public class DestructableObject : MonoBehaviour
     {
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
 
-        LevelGrid.Instance.SetDestructableAtGridPosition(gridPosition, this);
         healthSystem.OnDead += HealthSystem_OnDead;
     }
 

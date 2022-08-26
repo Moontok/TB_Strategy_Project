@@ -29,14 +29,7 @@ public class CameraController : MonoBehaviour
 
     void HandleZoom()
     {
-        if (Input.mouseScrollDelta.y > 0)
-        {
-            targetFollowOffset.y -= zoomSpeed;
-        }
-        else if (Input.mouseScrollDelta.y < 0)
-        {
-            targetFollowOffset.y += zoomSpeed;
-        }
+        targetFollowOffset.y += InputManager.Instance.GetCameraZoomAmount();
 
         targetFollowOffset.y = Mathf.Clamp(targetFollowOffset.y, MIN_FOLLOW_Y_OFFSET, MAX_FOLLOW_Y_OFFSET);
 
@@ -47,40 +40,16 @@ public class CameraController : MonoBehaviour
     {
         Vector3 rotationVector = Vector3.zero;
 
-        if (Input.GetKey(KeyCode.Q))
-        {
-            rotationVector.y = 1f;
-        }
-        else if (Input.GetKey(KeyCode.E))
-        {
-            rotationVector.y = -1f;
-        }
+        rotationVector.y = InputManager.Instance.GetCameraRotateAmount();
 
         transform.eulerAngles += rotationVector * rotationSpeed * Time.deltaTime;
     }
 
     void HandleMovement()
     {
-        Vector3 inputMoveDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.W))
-        {
-            inputMoveDir.z = 1f;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            inputMoveDir.z = -1f;
-        }
+        Vector2 inputMoveDir = InputManager.Instance.GetCameraMoveVector();
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            inputMoveDir.x = 1f;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            inputMoveDir.x = -1f;
-        }
-
-        Vector3 moveVector = transform.forward * inputMoveDir.z + transform.right * inputMoveDir.x;
+        Vector3 moveVector = transform.forward * inputMoveDir.y + transform.right * inputMoveDir.x;
         transform.position += moveVector * moveSpeed * Time.deltaTime;
     }
 }

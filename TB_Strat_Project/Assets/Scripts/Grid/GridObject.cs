@@ -5,7 +5,7 @@ public class GridObject
     GridSystem<GridObject> gridSystem = null;
     GridPosition gridPosition = new GridPosition(); 
     List<Unit> unitList = null;
-    Door door = null;
+    IInteractable interactable = null;
     DestructableObject destructable = null;
 
     public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
@@ -53,23 +53,13 @@ public class GridObject
             return null;
     }
 
-    public Door GetDoor()
+    public IInteractable GetInteractable()
     {
-        return door;
+        return interactable;
     }
 
-    public void SetDoor(Door door)
+    public void SetInteractable(IInteractable interactable)
     {
-        this.door = door;
-    }
-
-    public DestructableObject GetDestructable()
-    {
-        return destructable;
-    }
-
-    public void SetDestructable(DestructableObject destructable)
-    {
-        this.destructable = destructable;
+        this.interactable = interactable;
     }
 }
